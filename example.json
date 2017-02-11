@@ -1,0 +1,22 @@
+{
+    "rows": 10,
+    "cols": 10,
+    "solution": {
+        "start": [0, 0],
+        "solution": [ "l", "l", "d" ]
+    },
+    "generation": [
+        {
+            "start": [10, 9],
+            "solution": [ "l", "l", "d" ]
+        },
+        {
+            "start": [0, 0],
+            "solution": [ "l", "l", "d" ]
+        },
+        {
+            "start": [0, 0],
+            "solution": [ "l", "l", "d" ]
+        }
+    ]
+}
