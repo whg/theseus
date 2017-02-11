@@ -1,9 +1,9 @@
 {
-    "rows": 10,
-    "cols": 10,
+    "rows": 5,
+    "cols": 5,
     "solution": {
-        "start": [0, 0],
-        "solution": [ "l", "l", "d" ]
+        "start": [0, 3],
+        "solution": [ "d", "d", "d", "d", "d", "d" ]
     },
     "generation": [
         {

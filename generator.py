@@ -30,6 +30,14 @@ class Maze:
         self.cols = cols
         self.grid = [[Cell() for col in range(cols+2)] for row in range(rows+2)]
 
+        # Clear the cells around the edge of the maze
+        for x in range(cols+2):
+            self.grid[0][x].knockdown('new')
+            self.grid[rows+1][x].knockdown('esw')
+        for y in range(rows+2):
+            self.grid[y][0].knockdown('nsw')
+            self.grid[y][rows+1].knockdown('nes')
+
     def __repr__(self):
         output = ""
         for row in self.grid:
@@ -59,6 +67,4 @@ config = json.load(open('example.json'))
 
 maze = Maze(config['rows'], config['cols'])
 
-maze.knockdown((0,0), 'nesw')
-
-print maze
+print(maze)
