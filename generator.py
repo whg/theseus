@@ -59,7 +59,7 @@ class Maze:
         output = ''
         for y in range(self.rows):
             output+= '+'
-            row = self.grid[y]
+            row = self.grid[y+1][1:-1] # skip padding
             for cell in row:
                 output+= ('-' if cell.north else ' ') * 3
                 output+= '+'
