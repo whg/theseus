@@ -63,8 +63,31 @@ class Maze:
             if side == 'w' and x > 0:
                 self.grid[y][x-1].knockdown('e')
 
+    def ascii(self):
+        output = ''
+        for y in range(self.rows):
+            output+= '+'
+            row = self.grid[y+1][1:-1] # skip padding
+            for cell in row:
+                output+= ('-' if cell.north else ' ') * 3
+                output+= '+'
+            output+= '\n'
+            output+= '|' if row[0].west else ' '
+            for cell in row:
+                output+= ' ' * 3
+                output+= '|' if cell.east else ' '
+            output+= '\n'
+            if y == self.rows - 1:
+                output += '+'
+                for cell in row:
+                    output+= ('-' if cell.south else ' ') * 3
+                    output+= '+'
+                output+= '\n'
+        return output
+
 config = json.load(open('example.json'))
 
 maze = Maze(config['rows'], config['cols'])
 
 print(maze)
+print(maze.ascii())
