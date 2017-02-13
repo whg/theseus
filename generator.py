@@ -1,4 +1,5 @@
 import json
+import random
 
 class Cell:
     def __init__(self):
@@ -46,6 +47,21 @@ class Maze:
             output += "\n"
         return output
 
+    def getCell(self, position):
+        x, y = position
+        return self.grid[y][x]
+
+    def getNeighbourPositions(self, position):
+        x, y = position
+        output = set()
+        for x2 in [x-1, x+1]:
+            if x2 > 0 and x2 < self.cols+1:
+                output.add((x2, y))
+        for y2 in [y-1, y+1]:
+            if y2 > 0 and y2 < self.rows+1:
+                output.add((x, y2))
+        return output
+
     def knockdown(self, position, sides):
         x, y = position
 
@@ -85,9 +101,57 @@ class Maze:
                 output+= '\n'
         return output
 
+class Miner:
+    def __init__(self, maze):
+        self.maze = maze
+        self.chart = { 'u': 'n', 'r': 'e', 'd': 's', 'l': 'w' }
+        self.unvisited = {(x+1, y+1) for x in range(maze.cols) for y in range(maze.rows)}
+        self.neighbours = set()
+
+    def setPosition(self, position):
+        self.pos = position
+
+    def mine(self, direction):
+        self.maze.knockdown(self.pos, self.chart[direction])
+
+        if direction == 'u':
+            self.pos[1] -= 1
+        elif direction == 'r':
+            self.pos[0] += 1
+        elif direction == 'd':
+            self.pos[1] += 1
+        elif direction == 'l':
+            self.pos[0] -= 1
+
+        pos = tuple(self.pos)
+        if pos in self.unvisited:
+            self.unvisited.remove(pos)
+            if pos in self.neighbours:
+                self.neighbours.remove(pos)
+
+            # Now add the neighbours to self.neighbours
+            neighbours = self.maze.getNeighbourPositions(pos)
+            self.neighbours = self.neighbours.union(self.unvisited.intersection(neighbours))
+
+    def solve(self, solution):
+        self.setPosition(solution['start'])
+        for move in solution['path']:
+            self.mine(move)
+        return self.maze
+
+    def generateMaze(self):
+        # Choose an unvisited square to start a new path from
+        cell = random.sample(self.neighbours, 1)
+
 config = json.load(open('example.json'))
 
 maze = Maze(config['rows'], config['cols'])
+
+miner = Miner(maze)
+maze = miner.solve(config['solution'])
+
+print('unvisited', miner.unvisited)
+print('neighbours', sorted(list(miner.neighbours)))
 
 print(maze)
 print(maze.ascii())

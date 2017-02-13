@@ -2,21 +2,21 @@
     "rows": 5,
     "cols": 5,
     "solution": {
-        "start": [0, 3],
-        "solution": [ "d", "d", "d", "d", "d", "d" ]
+        "start": [3, 0],
+        "path": [ "d", "d", "r", "d", "l", "l", "d", "d", "l", "d" ]
     },
     "generation": [
         {
             "start": [10, 9],
-            "solution": [ "l", "l", "d" ]
+            "path": [ "l", "l", "d" ]
         },
         {
             "start": [0, 0],
-            "solution": [ "l", "l", "d" ]
+            "path": [ "l", "l", "d" ]
         },
         {
             "start": [0, 0],
-            "solution": [ "l", "l", "d" ]
+            "path": [ "l", "l", "d" ]
         }
     ]
 }
