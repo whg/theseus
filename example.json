@@ -1,9 +1,9 @@
 {
-    "rows": 5,
-    "cols": 5,
+    "rows": 9,
+    "cols": 9,
     "solution": {
         "start": [3, 0],
-        "path": [ "d", "d", "r", "d", "l", "l", "d", "d", "l", "d" ]
+        "path": [ "d", "d", "r", "r", "d", "l", "d", "d", "r", "r", "r", "d", "r", "d", "d", "l", "l", "d", "d" ]
     },
     "generation": [
         {

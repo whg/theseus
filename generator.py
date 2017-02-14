@@ -111,6 +111,24 @@ class Miner:
     def setPosition(self, position):
         self.pos = position
 
+    def getRandomNeighbour(self):
+        nextCell = random.sample(self.neighbours,1)
+        return nextCell[0]
+
+    def getDirection(self, pos1, pos2):
+        x1, y1 = pos1
+        x2, y2 = pos2
+        direction = ''
+        if x2-x1 > 0:
+            direction = 'r'
+        elif x2-x1 < 0:
+            direction = 'l'
+        if y2-y1 > 0:
+            direction = 'd'
+        elif y2-y1 < 0:
+            direction = 'u'
+        return direction
+
     def mine(self, direction):
         self.maze.knockdown(self.pos, self.chart[direction])
 
@@ -139,9 +157,41 @@ class Miner:
             self.mine(move)
         return self.maze
 
+    def newPath(self):
+        # start a new path from the part of the maze already mined
+        self.setPosition(list(self.getRandomNeighbour()))
+        myNeighbours = self.maze.getNeighbourPositions(self.pos)
+
+        # update the unvisited and neighbour sets
+        pos = tuple(self.pos)
+        self.unvisited.remove(pos)
+        self.neighbours.remove(pos)
+        self.neighbours = self.neighbours.union(self.unvisited.intersection(myNeighbours))
+
+        # find a neighbour that is already in the maze
+        neighboursInMaze = myNeighbours.difference(self.unvisited)
+        pathCell = random.sample(neighboursInMaze,1)[0]
+
+        directionToPath = self.getDirection(pos, pathCell)
+        self.maze.knockdown(pos, self.chart[directionToPath])
+
+    def randomWalk(self):
+        myNeighbours = self.maze.getNeighbourPositions(self.pos)
+        unvisitedNeighbours = self.unvisited.intersection(myNeighbours)
+        #choose a random direction
+        while len(unvisitedNeighbours) > 0:
+            nextCell = random.sample(unvisitedNeighbours,1)[0]
+            direction = self.getDirection(self.pos, nextCell)
+            self.mine(direction)
+
+            myNeighbours = self.maze.getNeighbourPositions(self.pos)
+            unvisitedNeighbours = self.unvisited.intersection(myNeighbours)
+
     def generateMaze(self):
-        # Choose an unvisited square to start a new path from
-        cell = random.sample(self.neighbours, 1)
+        while len(self.unvisited) > 0:
+            self.newPath()
+            self.randomWalk()
+        return self.maze
 
 config = json.load(open('example.json'))
 
@@ -150,8 +200,7 @@ maze = Maze(config['rows'], config['cols'])
 miner = Miner(maze)
 maze = miner.solve(config['solution'])
 
-print('unvisited', miner.unvisited)
-print('neighbours', sorted(list(miner.neighbours)))
+maze = miner.generateMaze()
 
-print(maze)
+#print(maze)
 print(maze.ascii())
